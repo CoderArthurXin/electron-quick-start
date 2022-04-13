@@ -1,6 +1,11 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
+const Logger = require('./modules/logger')
+
+Logger.error('Fake error')
+Logger.info('Start Electron')
+Logger.debug('Debug info')
 
 function createWindow () {
   // Create the browser window.
