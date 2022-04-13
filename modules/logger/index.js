@@ -1,8 +1,11 @@
-const { mkdir } = require('../mkdir')
-const winston = require('winston')
-const DailyRotateFile = require('winston-daily-rotate-file')
+require('../date')
 const { app } = require('electron')
 const path = require('path')
+const winston = require('winston')
+const DailyRotateFile = require('winston-daily-rotate-file')
+
+const { mkdir } = require('../mkdir')
+
 
 const BASE_DIR = app.getPath('appData')
 const LOG_DIR = path.join(BASE_DIR, 'razer')
@@ -11,8 +14,7 @@ console.log(`Log dir: ${LOG_DIR}`)
 mkdir(LOG_DIR)
 
 function dateFormat () {
-  // return new Date().format('yyyy-MM-dd HH:mm:ss')
-  return '2022-04-13 17:30:00'
+  return new Date().format('yyyy-MM-dd hh:mm:ss')
 }
 
 const fileTransport = new DailyRotateFile({
