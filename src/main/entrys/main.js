@@ -13,6 +13,7 @@ function createWindow () {
     width: 780,
     height: 580,
     resizable: false,
+    icon: path.join(__dirname, 'RazerIcon.ico'),
     webPreferences: {
       nodeIntegration: true,
       // 官网似乎说是默认false，但是这里必须设置contextIsolation
