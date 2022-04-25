@@ -1,5 +1,5 @@
 {
-  "name": "electron-quick-start",
+  "name": "wifi-filter",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "./src/main/entrys/main.js",
@@ -25,5 +25,8 @@
     "node-wifi": "^2.0.16",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
+  },
+  "win": {
+    "icon": "./RazerIcon.ico"
   }
 }
