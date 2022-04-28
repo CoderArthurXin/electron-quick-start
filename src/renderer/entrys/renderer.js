@@ -8,8 +8,11 @@ const wifi = require('node-wifi');
 const fs = require('fs');
 
 let arrWifi = [];
+let isScan = false;
+let scanTimer = null;
+let scanTimes = 0;
 
-document.getElementById("filters").value = 'Razer,RZ'
+document.getElementById("filters").value = 'Razer,RZ,Jade,Gillian,Paige,Joanna'
 wifi.init({
   debug: true,
   iface: process.env.WIFI_IFACE
@@ -37,31 +40,54 @@ function setResult(result) {
  * @return {*}
  */
 function scanWifi() {
-  try {
-    wifi.scan((err, networks) => {
-      if (err) {
-        setResult(err.message);
-      } else {
-        let filters = document.getElementById("filters").value?.split(',');
-        if (filters) {
-          let len = filters.length;
-          networks = networks.filter((net) => {
-            for(let i = 0; i < len; ++i) {
-              if (net.ssid.indexOf(filters[i]) !== -1) return true;
+  if (isScan) {
+    clearInterval(scanTimer);
+    scanTimer = null;
+
+    isScan = false;
+    document.getElementById("scan").innerText = 'Start scan';
+  } else {
+    isScan = true;
+    scanTimes = 0;
+
+    document.getElementById("scan").innerText = 'Stop scan';
+    scanTimer = setInterval(() => {
+      try {
+        ++scanTimes;
+        wifi.scan((err, networks) => {
+          if (err) {
+            setResult(err.message);
+          } else {
+            let filters = document.getElementById("filters").value?.split(',');
+            if (filters) {
+              let len = filters.length;
+              networks = networks.filter((net) => {
+                for(let i = 0; i < len; ++i) {
+                  if (net.ssid.indexOf(filters[i]) !== -1) return true;
+                }
+                return false;
+              })
             }
-            return false;
-          })
-        }
+    
+            // 设置WiFi选择列表
+            setWifiForSelected(networks);
+    
+            let old = document.getElementById('wifi-list').value;
+            let s = `Scan (${scanTimes}) Times: `;
 
-        // 设置WiFi选择列表
-        setWifiForSelected(networks);
+            networks.forEach(net => {
+              s += net.ssid + ', ';
+            });
 
-        let s = JSON.stringify(networks);
-        document.getElementById('wifi-list').innerText = s;
+            s += ' ******** ' + old;
+            s = s.slice(0, 5120);
+            setResult(s);
+          }
+        });
+      } catch (e) {
+        setResult(e.message);
       }
-    });
-  } catch (e) {
-    setResult(e.message);
+    }, 1000);
   }
 }
 
