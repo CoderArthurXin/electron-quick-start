@@ -4,34 +4,10 @@
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <link href="./styles.css" rel="stylesheet">
-    <title>Wifi Filter</title>
+    <title>Base Branch</title>
   </head>
   <body>
-    <!-- 扫描wifi -->
-    <div>
-      <span>Filters:</span>
-      <input type="text" id="filters" size="70">
-      <button id="scan" onclick="scanWifi()">Scan</button>
- 
-    </div>
-    <!-- 连接WiFi -->
-    <div>
-      <div>
-        <span>Select: </span>
-        <input list="wifi-for-select" name="wifi-for-select" id="wifi-name">
-        <datalist id="wifi-for-select">
-        </datalist>
-        <span>Password: </span>
-        <input type="text" id="wifi-password">
-        <button onclick="connectWifi()">Connect</button>
-      </div>
-    </div>
-    <!-- 扫描结果 -->
-    <div>
-      <div>Result:</div>
-      <textarea name="wifi-list" id="wifi-list" cols="100" rows="28"></textarea>
-    </div>
-
+    <div>Base branch</div>
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
   </body>

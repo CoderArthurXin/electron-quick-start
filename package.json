@@ -1,5 +1,5 @@
 {
-  "name": "wifi-filter",
+  "name": "base",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "./src/main/entrys/main.js",
@@ -22,7 +22,6 @@
     "electron-builder": "^23.0.3"
   },
   "dependencies": {
-    "node-wifi": "^2.0.16",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
   },
