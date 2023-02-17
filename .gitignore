@@ -1,2 +1,8 @@
 node_modules
 dist
+logs
+.vs
+x86
+x64
+*.log
+*.lock

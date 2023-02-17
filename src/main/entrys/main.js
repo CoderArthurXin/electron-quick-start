@@ -1,11 +1,14 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const Logger = require('../modules/logger')
+const ffi = require('ffi-napi');
 
 Logger.error('Fake error')
 Logger.info('Start Electron')
 Logger.debug('Debug info')
+
+let ffiLib = undefined;
 
 function createWindow () {
   // Create the browser window.
@@ -19,7 +22,6 @@ function createWindow () {
       // 官网似乎说是默认false，但是这里必须设置contextIsolation
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
-      
     }
   })
 
@@ -28,7 +30,29 @@ function createWindow () {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+
+  let count = 0;
+  setInterval(() => {
+    console.log('=> ', ++count);
+  }, 1000);
 }
+
+ipcMain.on('MR', (event, args) => {
+  if (args == 'loadDLL') {
+    let apiObj = {
+      add: ['uint32', ['uint32', 'uint32']],
+      testSleep: ['void', ['uint32']],
+      doSomethingTimeConsuming: ['uint32', ['uint32']],
+    };
+
+    ffiLib = ffi.Library('C:\\00_Work\\03_Personal\\Code\\ArthurXin\\electron-quick-start\\cpp_code\\forTest\\x64\\Debug\\forTest.dll', apiObj);
+  } else if (args == 'Add') {
+    const sum = ffiLib['add'](12, 34);
+    console.log('sum -> ', sum)
+  } else if (args == 'Sleep') {
+    ffiLib['doSomethingTimeConsuming'](10000);
+  }
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
