@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, safeStorage, ipcMain} = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -8,6 +8,8 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -16,8 +18,25 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
+
+ipcMain.handle('encrypt', (event, data) => {
+  let encrypted = ''
+  if (safeStorage.isEncryptionAvailable()) {
+    encrypted = safeStorage.encryptString(data)
+  }
+  return encrypted
+})
+
+ipcMain.handle('decrypt', (event, data) => {
+  let plainText = ''
+  console.log('decrypt data -> ', typeof(data), data)
+  if (safeStorage.isEncryptionAvailable()) {
+    plainText = safeStorage.decryptString(data)
+  }
+  return plainText
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
