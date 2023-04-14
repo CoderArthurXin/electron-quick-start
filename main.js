@@ -1,6 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, webFrameMain} = require('electron')
 const path = require('path')
+const _webFrameMain = require('./_webFrameMain');
+
+const fileName = 'main'
 
 function createWindow () {
   // Create the browser window.
@@ -17,6 +20,30 @@ function createWindow () {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  let count = 0
+  mainWindow.webContents.on(
+    'did-frame-navigate',
+    (event, url, httpResponseCode, httpStatusText, isMainFrame, frameProcessId, frameRoutingId) => {
+      console.log('---------------------------------------------')
+      console.log(`[${fileName}] url: `, url)
+      console.log(`[${fileName}] httpResponseCode: `, httpResponseCode)
+      console.log(`[${fileName}] httpStatusText: `, httpStatusText)
+      console.log(`[${fileName}] isMainFrame: `, isMainFrame)
+      console.log(`[${fileName}] frameProcessId: `, frameProcessId)
+      console.log(`[${fileName}] frameRoutingId: `, frameRoutingId)
+
+      ++count
+      const frame = webFrameMain.fromId(frameProcessId, frameRoutingId)
+      frame.on('dom-ready', () => {
+        const code = `document.body.innerHTML = document.body.innerHTML.replaceAll("首页", "Family(${count})")`
+        console.log(`[${fileName}] execute js coce`)
+        frame.executeJavaScript(code)
+      })
+      console.log('---------------------------------------------')
+      console.log('')
+    }
+  )
 }
 
 // This method will be called when Electron has finished
@@ -24,6 +51,7 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
+  _webFrameMain.create()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
