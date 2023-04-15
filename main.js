@@ -23,6 +23,10 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+
+  // 注册协议
+  require('./protocol')
+
   createWindow()
 
   app.on('activate', function () {
