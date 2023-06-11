@@ -6,6 +6,44 @@
 // process.
 const { ipcRenderer } = require('electron');
 
-function sendEvent(event) {
-  ipcRenderer.send('MR', event)
+const CHANNELNAME = 'test-ffi';
+
+let count = 0;
+setInterval(() => {
+  console.log('renderer count => ', ++count);
+}, 2000);
+
+async function loadDLL() {
+  const fnName = 'loadDLL'
+  ipcRenderer.invoke(CHANNELNAME, {
+    action: 'loadDLL'
+  }).then(res => {
+    console.log(`${fnName} res -> `, res);
+  }).catch(err => {
+    console.log(`${fnName} err -> `, err);
+  })
+}
+
+
+async function syncSleep10S() {
+  const fnName = 'syncSleep10S'
+  ipcRenderer.invoke(CHANNELNAME, {
+    action: 'syncSleep10S'
+  }).then(res => {
+    console.log(`${fnName} res -> `, res);
+  }).catch(err => {
+    console.log(`${fnName} err -> `, err);
+  })
+}
+
+
+async function asyncSleep10S() {
+  const fnName = 'asyncSleep10S'
+  ipcRenderer.invoke(CHANNELNAME, {
+    action: 'asyncSleep10S'
+  }).then(res => {
+    console.log(`${fnName} res -> `, res);
+  }).catch(err => {
+    console.log(`${fnName} err -> `, err);
+  })
 }

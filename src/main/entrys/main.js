@@ -1,14 +1,11 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const Logger = require('../modules/logger')
-const ffi = require('ffi-napi');
 
 Logger.error('Fake error')
 Logger.info('Start Electron')
 Logger.debug('Debug info')
-
-let ffiLib = undefined;
 
 function createWindow () {
   // Create the browser window.
@@ -29,30 +26,13 @@ function createWindow () {
   mainWindow.loadFile('./src/renderer/entrys/index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   let count = 0;
   setInterval(() => {
     console.log('=> ', ++count);
-  }, 1000);
+  }, 2000);
 }
-
-ipcMain.on('MR', (event, args) => {
-  if (args == 'loadDLL') {
-    let apiObj = {
-      add: ['uint32', ['uint32', 'uint32']],
-      testSleep: ['void', ['uint32']],
-      doSomethingTimeConsuming: ['uint32', ['uint32']],
-    };
-
-    ffiLib = ffi.Library('C:\\00_Work\\03_Personal\\Code\\ArthurXin\\electron-quick-start\\cpp_code\\forTest\\x64\\Debug\\forTest.dll', apiObj);
-  } else if (args == 'Add') {
-    const sum = ffiLib['add'](12, 34);
-    console.log('sum -> ', sum)
-  } else if (args == 'Sleep') {
-    ffiLib['doSomethingTimeConsuming'](10000);
-  }
-})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -60,12 +40,16 @@ ipcMain.on('MR', (event, args) => {
 app.whenReady().then(() => {
   createWindow()
 
+  require('./ffi');
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-})
+}).catch(e => {
+  console.log(e);
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

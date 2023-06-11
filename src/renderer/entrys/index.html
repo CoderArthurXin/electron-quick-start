@@ -8,9 +8,20 @@
   </head>
   <body>
     <div>FFI branch</div>
-    <button onclick="sendEvent('loadDLL')">load DLL</button>
-    <button onclick="sendEvent('Add')">Add</button>
-    <button onclick="sendEvent('Sleep')">Add</button>
+    <div>
+      <div>
+        <button onclick="loadDLL()">加载DLL</button>
+      </div>
+
+      <div>
+        <button onclick="syncSleep10S()">同步睡眠10秒</button>
+      </div>
+
+      <div>
+        <button onclick="asyncSleep10S()">异步睡眠10秒</button>
+      </div>
+
+    </div>
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
   </body>
