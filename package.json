@@ -22,7 +22,7 @@
     "electron-builder": "^23.0.3"
   },
   "dependencies": {
-    "ffi-napi": "^4.0.3",
+    "ffi-napi": "file:./ffi-napi",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
   },
